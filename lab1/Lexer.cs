@@ -64,7 +64,7 @@ namespace lab1
                 return;
             }
 
-            bool canBeComment = false, isComment = false;
+            bool canBeComment = false, isComment = false, CommentEnds = false;
             SymbType sbType;
             while ((tmp = reader.Read()) != -1)
             {
@@ -76,11 +76,24 @@ namespace lab1
                         Tokens.Add(new Token('(', row, col));
                     canBeComment = false;
                 }
-                if (isComment) {
-                    if (tmp == '*' && reader.Read() == ')')
-                        isComment = false;
+                if (isComment)
+                {
+                    if (tmp == '*')
+                        CommentEnds = true;
+                    else if (CommentEnds)
+                    {
+                        if (tmp == ')')
+                            isComment = false;
+                        CommentEnds = false;
+                    }
+                    if (tmp == 10)
+                    {
+                        col = 1;
+                        row++;
+                    }
+                    else
+                        col++;
                     continue;
-
                 }
 
                 if (symbols.ContainsKey(tmp))
@@ -96,6 +109,7 @@ namespace lab1
                             break;
                         case SymbType.comParenth:
                             canBeComment = true;
+                            col++;
                             break;
                         case SymbType.dm:
                             Tokens.Add(new Token(tmp, row, col));
@@ -183,7 +197,7 @@ namespace lab1
                 col = 1;
             }
             firstSymb = tmp;
-           // Console.Write($"{buff}\n");
+            // Console.Write($"{buff}\n");
         }
 
         private void CreateStartTables()
