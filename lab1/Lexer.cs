@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 
@@ -96,8 +95,7 @@ namespace lab1
                             ReadToken(reader, ref tmp, ref row, ref col);
                             break;
                         case SymbType.comParenth:
-                            if (!canBeComment)
-                                canBeComment = true;
+                            canBeComment = true;
                             break;
                         case SymbType.dm:
                             Tokens.Add(new Token(tmp, row, col));
