@@ -9,12 +9,12 @@ namespace lab1
 {
     struct Token
     {
-        public int TokenCode;
+        public int tokenCode;
         public int row;
         public int col;
-        public Token(int _TokenCode, int _row, int _col)
+        public Token(int _tokenCode, int _row, int _col)
         {
-            this.TokenCode = _TokenCode;
+            this.tokenCode = _tokenCode;
             this.row = _row;
             this.col = _col;
         }
@@ -32,26 +32,29 @@ namespace lab1
 
     class Lexer
     {
-        private List<Token> Tokens;
+        private List<Token> tokens;
+        private List<string> errors;
 
         private string pathToFile;
+
         private Dictionary<int, SymbType> symbols;
         private Dictionary<string, int> keywords;
         private Dictionary<string, int> identifiers;
-        private Dictionary<string, int> constants;
 
         public Lexer(string path)
         {
-            Tokens = new List<Token>();
+            tokens = new List<Token>();
+            errors = new List<string>();
             identifiers = new Dictionary<string, int>();
-            constants = new Dictionary<string, int>();
+            symbols = new Dictionary<int, SymbType>();
+
             pathToFile = path;
             CreateStartTables();
         }
 
         public void ReadFromFile()
         {
-            int tmp;
+            int curSymb;
             int row = 1, col = 1;
             StreamReader reader;
             try
@@ -60,149 +63,175 @@ namespace lab1
             }
             catch (Exception ex)
             {
-                Console.Write($"Даруйте, такого файлу нема...\n{ex.Message}");
+                Console.Write($"File not found\n{ex.Message}");
                 return;
             }
 
-            bool canBeComment = false, isComment = false, CommentEnds = false;
-            SymbType sbType;
-            while ((tmp = reader.Read()) != -1)
+            bool canBeComment = false;
+
+            while ((curSymb = reader.Read()) != -1)
             {
                 if (canBeComment)
                 {
-                    if (tmp == '*')
-                        isComment = true;
+                    if (curSymb == '*')
+                    {
+                        col += 2;
+                        ProcessComment(reader, ref row, ref col);
+                    }
                     else
-                        Tokens.Add(new Token('(', row, col));
+                    {
+                        tokens.Add(new Token('(', row, col));
+                        col++;
+
+                    }
                     canBeComment = false;
                 }
-                if (isComment)
-                {
-                    if (tmp == '*')
-                        CommentEnds = true;
-                    else if (CommentEnds)
-                    {
-                        if (tmp == ')')
-                            isComment = false;
-                        CommentEnds = false;
-                    }
-                    if (tmp == 10)
-                    {
-                        col = 1;
-                        row++;
-                    }
-                    else
-                        col++;
-                    continue;
-                }
 
-                if (symbols.ContainsKey(tmp))
+                if (symbols.ContainsKey(curSymb))
                 {
-                    sbType = symbols[tmp];
-                    switch (sbType)
+                    switch (symbols[curSymb])
                     {
                         case SymbType.dig:
-                            ReadToken(reader, ref tmp, ref row, ref col);
+                            ReadToken(reader, curSymb, ref row, ref col);
                             break;
                         case SymbType.let:
-                            ReadToken(reader, ref tmp, ref row, ref col);
+                            ReadToken(reader, curSymb, ref row, ref col);
                             break;
                         case SymbType.comParenth:
                             canBeComment = true;
-                            col++;
                             break;
                         case SymbType.dm:
-                            Tokens.Add(new Token(tmp, row, col));
+                            tokens.Add(new Token(curSymb, row, col));
+                            col++;
                             break;
                         case SymbType.ws:
-                            if (tmp == 10)
-                            {
-                                row++;
-                                col = 1;
-                            }
-                            else
-                                col++;
-                            break;
-                        default:
+                            ProcessWhitespace(reader, curSymb, ref row, ref col);
                             break;
                     }
                 }
                 else
                 {
-                    ;//add error
+                    errors.Add("Forbidden symbol at line " + row + " col " + col + ".\n");
                 }
-                if (tmp == -1)
-                    break;
             }
             reader.Close();
-            if (isComment)
-                Console.WriteLine("Fuck, unexpected end of file!");
-            foreach (Token i in Tokens)
+
+            foreach (Token i in tokens)
             {
-                Console.Write($"{i.TokenCode} {i.row} {i.col}\n");
+                Console.Write($"{i.tokenCode} {i.row} {i.col}\n");
             }
-            Console.WriteLine(Tokens.Count());
+            foreach (string i in errors)
+            {
+                Console.WriteLine(i);
+            }
+            Console.WriteLine(tokens.Count());
         }
 
-        private void ReadToken(StreamReader reader, ref int firstSymb, ref int row, ref int col)
+        private void ReadToken(StreamReader reader, int firstSymb, ref int row, ref int col)
         {
             StringBuilder builder = new StringBuilder();
             builder.Append((char)firstSymb);
             string buff = null;
-            int tmp = reader.Read();
-            while (symbols.ContainsKey(tmp) && (symbols[tmp] == SymbType.let || symbols[tmp] == SymbType.dig))
+            int curSymb = reader.Read();
+            while (symbols.ContainsKey(curSymb) && (symbols[curSymb] == SymbType.let || symbols[curSymb] == SymbType.dig))
             {
-                builder.Append((char)tmp);
-                tmp = reader.Read();
+                builder.Append((char)curSymb);
+                curSymb = reader.Read();
             }
 
             buff = builder.ToString();
-            //Console.Write($"{buff}\n");
 
             if (symbols[firstSymb] == SymbType.dig)
             {
-                if (constants.ContainsKey(buff))
-                    Tokens.Add(new Token(constants[buff], row, col));
-                else
-                {
-                    constants.Add(buff, 1001 + constants.Count());
-                    Tokens.Add(new Token(constants[buff], row, col));
-                }
+                errors.Add("Identifier can't begin with digit at line " + row + " column " + col + ".\n");
             }
             else
             {
                 if (keywords.ContainsKey(buff.ToUpper()))
-                    Tokens.Add(new Token(keywords[buff.ToUpper()], row, col));
+                    tokens.Add(new Token(keywords[buff.ToUpper()], row, col));
                 else
                 {
                     if (identifiers.ContainsKey(buff))
-                        Tokens.Add(new Token(identifiers[buff], row, col));
+                        tokens.Add(new Token(identifiers[buff], row, col));
                     else
                     {
                         identifiers.Add(buff, 501 + identifiers.Count());
-                        Tokens.Add(new Token(identifiers[buff], row, col));
+                        tokens.Add(new Token(identifiers[buff], row, col));
                     }
                 }
             }
             col += buff.Length;
-            if (symbols.ContainsKey(tmp) && symbols[tmp] == SymbType.dm)
-                Tokens.Add(new Token(tmp, row, col));
-            else if (!symbols.ContainsKey(tmp))
+
+            if (symbols.ContainsKey(curSymb))
             {
-                ;//add error
+                switch (symbols[curSymb])
+                {
+                    case SymbType.comParenth:
+                        ProcessComment(reader, ref row, ref col);
+                        break;
+                    case SymbType.dm:
+                        tokens.Add(new Token(curSymb, row, col));
+                        col++;
+                        break;
+                    case SymbType.ws:
+                        ProcessWhitespace(reader, curSymb, ref row, ref col);
+                        break;
+                }
             }
-            else if (tmp == 10)
+            else
+            {
+                errors.Add("Forbidden symbol at line " + row + " col " + col + ".\n");
+                col++;
+            }
+        }
+
+        private void ProcessComment(StreamReader reader, ref int row, ref int col)
+        {
+            int curSymb;
+            bool CommentEnds = false, CommentOk = false; ;
+
+            while ((curSymb = reader.Read()) != -1)
+            {
+                col++;
+                if (CommentEnds && curSymb == ')')
+                {
+                    CommentOk = true;
+                    break;
+                }
+                else
+                {
+                    CommentEnds = false;
+                }
+                if (curSymb == '*')
+                {
+                    CommentEnds = true;
+                }
+                if (curSymb == 10)
+                {
+                    row++;
+                    col = 1;
+                }
+            }
+
+            if (!CommentOk)
+                errors.Add("Comment was not clossed.\n");
+        }
+
+        private void ProcessWhitespace(StreamReader reader, int curWs, ref int row, ref int col)
+        {
+            if (curWs == 10)
             {
                 row++;
                 col = 1;
             }
-            firstSymb = tmp;
-            // Console.Write($"{buff}\n");
+            else
+            {
+                col++;
+            }
         }
 
         private void CreateStartTables()
         {
-            symbols = new Dictionary<int, SymbType>();
             for (int i = 48; i <= 57; i++)
                 symbols.Add(i, SymbType.dig); //digits
 
@@ -236,12 +265,6 @@ namespace lab1
                 { "BLOCKFLOAT", 409 },
                 { "EXT", 410 }
             };
-
-            //foreach (int i in symbols.Keys)
-            //    Console.WriteLine($"{(char)i} {symbols[i].ToString() }");
-
-            //foreach (string i in keywords.Keys)
-            //    Console.WriteLine($"{i} {keywords[i] }");
         }
     }
 }
