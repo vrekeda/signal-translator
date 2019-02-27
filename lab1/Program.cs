@@ -1,14 +1,22 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace lab1
 {
     class Program
     {
-        static void Main(string[] args)
+        //static void Main(string[] args)
+        //{
+        //    Lexer lexer = new Lexer("test.txt");
+        //    lexer.ReadFile();
+        //    Console.ReadLine();
+        //}
+        [STAThread]
+        static void Main()
         {
-            Lexer lex = new Lexer("test.txt");
-            lex.ReadFromFile();
-            Console.ReadLine();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new MainWindow());
         }
     }
 }

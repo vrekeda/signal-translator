@@ -39,6 +39,7 @@ namespace lab1
 
         private Dictionary<int, SymbType> symbols;
         private Dictionary<string, int> keywords;
+
         private Dictionary<string, int> identifiers;
 
         public Lexer(string path)
@@ -52,7 +53,27 @@ namespace lab1
             CreateStartTables();
         }
 
-        public void ReadFromFile()
+        public string GetPathToFile()
+        {
+            return pathToFile;
+        }
+
+        public List<Token> GetTokens()
+        {
+            return tokens;
+        }
+
+        public Dictionary<string, int> getIdentifiers()
+        {
+            return identifiers;
+        }
+
+        public List<string> getErrors()
+        {
+            return errors;
+        }
+
+        public void ReadFile()
         {
             int curSymb;
             int row = 1, col = 1;
@@ -266,5 +287,13 @@ namespace lab1
                 { "EXT", 410 }
             };
         }
+
+        public void Clear()
+        {
+            this.errors.Clear();
+            this.identifiers.Clear();
+            this.tokens.Clear();
+        }
+
     }
 }
