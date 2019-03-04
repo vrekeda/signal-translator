@@ -53,6 +53,30 @@ namespace lab1
             CreateStartTables();
         }
 
+        public Lexer()
+        {
+            tokens = new List<Token>();
+            errors = new List<string>();
+            identifiers = new Dictionary<string, int>();
+            symbols = new Dictionary<int, SymbType>();
+            CreateStartTables();
+        }
+
+        public void SetPath(string path)
+        {
+            pathToFile = path;
+        }
+
+        public Dictionary<int, SymbType> GetSymbols()
+        {
+            return symbols;
+        }
+
+        public Dictionary<string, int> GetKeywords()
+        {
+            return keywords;
+        }
+
         public string GetPathToFile()
         {
             return pathToFile;
@@ -98,6 +122,8 @@ namespace lab1
                     {
                         col += 2;
                         ProcessComment(reader, ref row, ref col);
+                        canBeComment = false;
+                        continue;
                     }
                     else
                     {
@@ -108,18 +134,20 @@ namespace lab1
                     canBeComment = false;
                 }
 
+                if (symbols.ContainsKey(curSymb) && (symbols[curSymb] == SymbType.dig || symbols[curSymb] == SymbType.let))
+                {
+                    ReadToken(reader, ref curSymb, ref row, ref col);
+                }
                 if (symbols.ContainsKey(curSymb))
                 {
                     switch (symbols[curSymb])
                     {
-                        case SymbType.dig:
-                            ReadToken(reader, curSymb, ref row, ref col);
-                            break;
-                        case SymbType.let:
-                            ReadToken(reader, curSymb, ref row, ref col);
-                            break;
                         case SymbType.comParenth:
                             canBeComment = true;
+                            break;
+                        case SymbType.comAsterisk:
+                            errors.Add("Forbidden symbol at line " + row + " col " + col + ".");
+                            col++;
                             break;
                         case SymbType.dm:
                             tokens.Add(new Token(curSymb, row, col));
@@ -132,7 +160,7 @@ namespace lab1
                 }
                 else
                 {
-                    errors.Add("Forbidden symbol at line " + row + " col " + col + ".\n");
+                    errors.Add("Forbidden symbol at line " + row + " col " + col + ".");
                 }
             }
             reader.Close();
@@ -148,7 +176,7 @@ namespace lab1
             Console.WriteLine(tokens.Count());
         }
 
-        private void ReadToken(StreamReader reader, int firstSymb, ref int row, ref int col)
+        private void ReadToken(StreamReader reader, ref int firstSymb, ref int row, ref int col)
         {
             StringBuilder builder = new StringBuilder();
             builder.Append((char)firstSymb);
@@ -164,7 +192,7 @@ namespace lab1
 
             if (symbols[firstSymb] == SymbType.dig)
             {
-                errors.Add("Identifier can't begin with digit at line " + row + " column " + col + ".\n");
+                errors.Add("Identifier can't begin with digit at line " + row + " column " + col + ".");
             }
             else
             {
@@ -183,27 +211,7 @@ namespace lab1
             }
             col += buff.Length;
 
-            if (symbols.ContainsKey(curSymb))
-            {
-                switch (symbols[curSymb])
-                {
-                    case SymbType.comParenth:
-                        ProcessComment(reader, ref row, ref col);
-                        break;
-                    case SymbType.dm:
-                        tokens.Add(new Token(curSymb, row, col));
-                        col++;
-                        break;
-                    case SymbType.ws:
-                        ProcessWhitespace(reader, curSymb, ref row, ref col);
-                        break;
-                }
-            }
-            else
-            {
-                errors.Add("Forbidden symbol at line " + row + " col " + col + ".\n");
-                col++;
-            }
+            firstSymb = curSymb;
         }
 
         private void ProcessComment(StreamReader reader, ref int row, ref int col)
@@ -235,7 +243,7 @@ namespace lab1
             }
 
             if (!CommentOk)
-                errors.Add("Comment was not clossed.\n");
+                errors.Add("Comment was not clossed.");
         }
 
         private void ProcessWhitespace(StreamReader reader, int curWs, ref int row, ref int col)

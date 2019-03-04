@@ -17,6 +17,7 @@ namespace lab1
 
         public MainWindow()
         {
+            lexer = new Lexer();
             InitializeComponent();
         }
 
@@ -28,9 +29,13 @@ namespace lab1
             errorBox.Clear();
             identBox.Clear();
             tokenBox.Clear();
+            symbBox.Clear();
+            keywordBox.Clear();
             FillBoxWithCode(lexer.GetPathToFile());
             lexer.ReadFile();
             FillErrorBox();
+            FillSymbBox();
+            FillKeywordBox();
             FillIdentifierBox();
             FillTokensBox();
         }
@@ -64,7 +69,7 @@ namespace lab1
         {
             foreach (Token token in lexer.GetTokens())
             {
-                tokenBox.AppendText(token.tokenCode + " " + token.row + " " + token.col);
+                tokenBox.AppendText(token.tokenCode + " (" + token.row + ", " + token.col+")");
                 tokenBox.AppendText(Environment.NewLine);
             }
         }
@@ -88,6 +93,24 @@ namespace lab1
             }
         }
 
+        private void FillSymbBox()
+        {
+            foreach (var i in lexer.GetSymbols().Where(pair => pair.Value == SymbType.dm  || pair.Value==SymbType.comParenth))
+            {
+                symbBox.AppendText(i.Key + " " + (char)i.Key );
+                symbBox.AppendText(Environment.NewLine);
+            }
+        }
+
+        private void FillKeywordBox()
+        {
+            foreach (var i in lexer.GetKeywords())
+            {
+                keywordBox.AppendText(i.Value + " " + i.Key);
+                keywordBox.AppendText(Environment.NewLine);
+            }
+        }
+
         private void RefreshFile()
         {
             StreamWriter writer = new StreamWriter(lexer.GetPathToFile());
@@ -108,15 +131,25 @@ namespace lab1
         private void openBtn_Click_1(object sender, EventArgs e)
         {
             string str;
+            codeBox.Clear();
+            errorBox.Clear();
+            identBox.Clear();
+            tokenBox.Clear();
+            symbBox.Clear();
+            keywordBox.Clear();
+            lexer.Clear();
             openFileDialog1.ShowDialog();
             str = openFileDialog1.FileName;
             pathBox.Text = str;
             startBtn.Enabled = true;
-            lexer = new Lexer(str);
+            lexer.SetPath(str);
             FillBoxWithCode(lexer.GetPathToFile());
             //folderBrowserDialog1.ShowDialog();
         }
 
-
+        private void pathBox_TextChanged(object sender, EventArgs e)
+        {
+           // pathBox.DoDragDrop();
+        }
     }
 }
