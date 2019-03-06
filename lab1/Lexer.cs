@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-
 namespace lab1
 {
     struct Token
@@ -40,6 +39,7 @@ namespace lab1
         private Dictionary<int, SymbType> symbols;
         private Dictionary<string, int> keywords;
 
+        private Dictionary<string, int> dates;
         private Dictionary<string, int> identifiers;
 
         public Lexer(string path)
@@ -47,6 +47,7 @@ namespace lab1
             tokens = new List<Token>();
             errors = new List<string>();
             identifiers = new Dictionary<string, int>();
+            dates = new Dictionary<string, int>();
             symbols = new Dictionary<int, SymbType>();
 
             pathToFile = path;
@@ -58,6 +59,7 @@ namespace lab1
             tokens = new List<Token>();
             errors = new List<string>();
             identifiers = new Dictionary<string, int>();
+            dates = new Dictionary<string, int>();
             symbols = new Dictionary<int, SymbType>();
             CreateStartTables();
         }
@@ -75,6 +77,11 @@ namespace lab1
         public Dictionary<string, int> GetKeywords()
         {
             return keywords;
+        }
+
+        public Dictionary<string, int> GetDates()
+        {
+            return dates;
         }
 
         public string GetPathToFile()
@@ -134,19 +141,28 @@ namespace lab1
                     canBeComment = false;
                 }
 
-                if (symbols.ContainsKey(curSymb) && (symbols[curSymb] == SymbType.dig || symbols[curSymb] == SymbType.let))
+                if (symbols.ContainsKey(curSymb) && (/*symbols[curSymb] == SymbType.dig ||*/ symbols[curSymb] == SymbType.let))
                 {
                     ReadToken(reader, ref curSymb, ref row, ref col);
                 }
+                //else if (symbols.ContainsKey(curSymb) && symbols[curSymb] == SymbType.dig  )
+                //{
+                //    ReadToken(reader, ref curSymb, ref row, ref col);
+                //}
                 if (symbols.ContainsKey(curSymb))
                 {
                     switch (symbols[curSymb])
                     {
+                        case SymbType.dig:
+                            //errors.Add("Forbidden symbol \"" + (char)curSymb + "\" at line " + row + " col " + col + ".");
+                            ReadData(reader, ref curSymb, ref row, ref col);
+                            col++;
+                            break;
                         case SymbType.comParenth:
                             canBeComment = true;
                             break;
                         case SymbType.comAsterisk:
-                            errors.Add("Forbidden symbol at line " + row + " col " + col + ".");
+                            errors.Add("Forbidden symbol \"" + (char)curSymb + "\" at line " + row + " col " + col + ".");
                             col++;
                             break;
                         case SymbType.dm:
@@ -158,9 +174,9 @@ namespace lab1
                             break;
                     }
                 }
-                else
+                else if (curSymb != -1)
                 {
-                    errors.Add("Forbidden symbol at line " + row + " col " + col + ".");
+                    errors.Add("Forbidden symbol \"" + (char)curSymb + "\" at line " + row + " col " + col + ".");
                 }
             }
             reader.Close();
@@ -190,28 +206,86 @@ namespace lab1
 
             buff = builder.ToString();
 
-            if (symbols[firstSymb] == SymbType.dig)
-            {
-                errors.Add("Identifier can't begin with digit at line " + row + " column " + col + ".");
-            }
+            //if (symbols[firstSymb] == SymbType.dig)
+            //{
+            //    errors.Add("Identifier can't begin with digit at line " + row + " column " + col + ".");
+            //}
+            //else
+            //{
+            if (keywords.ContainsKey(buff.ToUpper()))
+                tokens.Add(new Token(keywords[buff.ToUpper()], row, col));
             else
             {
-                if (keywords.ContainsKey(buff.ToUpper()))
-                    tokens.Add(new Token(keywords[buff.ToUpper()], row, col));
+                if (identifiers.ContainsKey(buff))
+                    tokens.Add(new Token(identifiers[buff], row, col));
                 else
                 {
-                    if (identifiers.ContainsKey(buff))
-                        tokens.Add(new Token(identifiers[buff], row, col));
-                    else
-                    {
-                        identifiers.Add(buff, 501 + identifiers.Count());
-                        tokens.Add(new Token(identifiers[buff], row, col));
-                    }
+                    identifiers.Add(buff, 501 + identifiers.Count());
+                    tokens.Add(new Token(identifiers[buff], row, col));
                 }
             }
+            //}
             col += buff.Length;
 
             firstSymb = curSymb;
+        }
+
+        private void ReadData(StreamReader reader, ref int firstSymb, ref int row, ref int col)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append((char)firstSymb);
+            string buff = null;
+            bool dataOk = false;
+            builder.Append(ReadDigits(reader, 1));
+            if (builder[builder.Length - 1] == '/')
+            {
+                builder.Append(ReadDigits(reader, 2));
+                if (builder[builder.Length - 1] == '/')
+                {
+                    builder.Append(ReadDigits(reader, 3));
+                    if (builder.Length == 10 && symbols.ContainsKey(builder[builder.Length - 1]) && (symbols[builder[builder.Length - 1]] == SymbType.dig))
+                    {
+                        dataOk = true;
+                    }
+                }
+            }
+
+
+            if (dataOk)
+            {
+                buff = builder.ToString();
+                if (dates.ContainsKey(buff))
+                    tokens.Add(new Token(dates[buff], row, col));
+                else
+                {
+                    dates.Add(buff, 2001 + dates.Count());
+                    tokens.Add(new Token(dates[buff], row, col));
+                }
+                col += buff.Length;
+            }
+
+            else
+            {
+                errors.Add("Ivalid date: " + row + " " + col + ".");
+                col += builder.Length;
+            }
+
+            //tokens.Add(new Token(identifiers[buff], row, col));
+
+        }
+
+        private string ReadDigits(StreamReader reader, int nmbOfDigits)
+        {
+            int curSymb = reader.Read();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < nmbOfDigits; i++)
+            {
+                if (symbols.ContainsKey(curSymb) && symbols[curSymb] == SymbType.dig)
+                    builder.Append((char)curSymb);
+                curSymb = reader.Read();
+            }
+            builder.Append((char)curSymb);
+            return builder.ToString();
         }
 
         private void ProcessComment(StreamReader reader, ref int row, ref int col)
@@ -243,7 +317,7 @@ namespace lab1
             }
 
             if (!CommentOk)
-                errors.Add("Comment was not clossed.");
+                errors.Add("Comment was not clossed: " + row + " " + col + ".");
         }
 
         private void ProcessWhitespace(StreamReader reader, int curWs, ref int row, ref int col)
@@ -273,6 +347,7 @@ namespace lab1
                 symbols.Add(i, SymbType.ws);
             symbols.Add(32, SymbType.ws);  //whitespaces
 
+            symbols.Add('/', SymbType.dm);
             symbols.Add(';', SymbType.dm);
             symbols.Add(':', SymbType.dm);
             symbols.Add(',', SymbType.dm);
@@ -301,6 +376,7 @@ namespace lab1
             this.errors.Clear();
             this.identifiers.Clear();
             this.tokens.Clear();
+            this.dates.Clear();
         }
 
     }

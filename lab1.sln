@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lab1", "lab1\lab1.csproj", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B7C4F183-02B4-48FD-B7C8-F261143F54BD}"
 	ProjectSection(SolutionItems) = preProject
+		lab1\bin\Debug\new.txt = lab1\bin\Debug\new.txt
 		lab1\bin\Debug\test.txt = lab1\bin\Debug\test.txt
 	EndProjectSection
 EndProject

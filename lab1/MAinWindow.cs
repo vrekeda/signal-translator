@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
@@ -67,9 +64,29 @@ namespace lab1
 
         private void FillTokensBox()
         {
+            Dictionary<string, int> tmpId = lexer.getIdentifiers();
+            Dictionary<string, int> tmpDates = lexer.GetDates();
+            Dictionary<string, int> tmpKw = lexer.GetKeywords();
+
             foreach (Token token in lexer.GetTokens())
             {
-                tokenBox.AppendText(token.tokenCode + " (" + token.row + ", " + token.col+")");
+                tokenBox.AppendText(String.Format("{0, -5} ({1, -2},{2, 3}) ", token.tokenCode, token.row, token.col));
+                if (token.tokenCode < 127)
+                {
+                    tokenBox.AppendText(String.Format("{0}", (char)token.tokenCode));
+                }
+                else if (token.tokenCode > 400 && token.tokenCode <= 500)
+                {
+                    tokenBox.AppendText(tmpKw.FirstOrDefault(x => x.Value == token.tokenCode).Key);
+                }
+                else if (token.tokenCode > 500 && token.tokenCode <= 1000)
+                {
+                    tokenBox.AppendText(tmpId.FirstOrDefault(x => x.Value == token.tokenCode).Key);
+                }
+                else if (token.tokenCode > 2000 && token.tokenCode <= 3000)
+                {
+                    tokenBox.AppendText(tmpDates.FirstOrDefault(x => x.Value == token.tokenCode).Key);
+                }
                 tokenBox.AppendText(Environment.NewLine);
             }
         }
@@ -91,13 +108,21 @@ namespace lab1
                 identBox.AppendText(tmp[str] + " " + str);
                 identBox.AppendText(Environment.NewLine);
             }
+            tmp = lexer.GetDates();
+            identBox.AppendText("Dates:");
+            identBox.AppendText(Environment.NewLine);
+            foreach (string str in tmp.Keys)
+            {
+                identBox.AppendText(tmp[str] + " " + str);
+                identBox.AppendText(Environment.NewLine);
+            }
         }
 
         private void FillSymbBox()
         {
-            foreach (var i in lexer.GetSymbols().Where(pair => pair.Value == SymbType.dm  || pair.Value==SymbType.comParenth))
+            foreach (var i in lexer.GetSymbols().Where(pair => pair.Value == SymbType.dm || pair.Value == SymbType.comParenth))
             {
-                symbBox.AppendText(i.Key + " " + (char)i.Key );
+                symbBox.AppendText(String.Format("{0, -3} {1}", i.Key, (char)i.Key));
                 symbBox.AppendText(Environment.NewLine);
             }
         }
@@ -106,7 +131,7 @@ namespace lab1
         {
             foreach (var i in lexer.GetKeywords())
             {
-                keywordBox.AppendText(i.Value + " " + i.Key);
+                keywordBox.AppendText(String.Format("{0, -4} {1}", i.Value, i.Key));
                 keywordBox.AppendText(Environment.NewLine);
             }
         }
@@ -149,7 +174,7 @@ namespace lab1
 
         private void pathBox_TextChanged(object sender, EventArgs e)
         {
-           // pathBox.DoDragDrop();
+            // pathBox.DoDragDrop();
         }
     }
 }
