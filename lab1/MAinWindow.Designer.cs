@@ -1,4 +1,4 @@
-﻿namespace lab1
+﻿namespace signalTranslator
 {
     partial class MainWindow
     {
@@ -44,6 +44,7 @@
             this.symbBox = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.keywordBox = new System.Windows.Forms.TextBox();
+            this.SyntaxTree = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
             // startBtn
@@ -51,7 +52,7 @@
             this.startBtn.Enabled = false;
             this.startBtn.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.startBtn.Location = new System.Drawing.Point(24, 11);
-            this.startBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.startBtn.Margin = new System.Windows.Forms.Padding(4);
             this.startBtn.Name = "startBtn";
             this.startBtn.Size = new System.Drawing.Size(345, 34);
             this.startBtn.TabIndex = 0;
@@ -62,30 +63,30 @@
             // codeBox
             // 
             this.codeBox.Location = new System.Drawing.Point(24, 84);
-            this.codeBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.codeBox.Margin = new System.Windows.Forms.Padding(4);
             this.codeBox.Multiline = true;
             this.codeBox.Name = "codeBox";
             this.codeBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.codeBox.Size = new System.Drawing.Size(345, 260);
+            this.codeBox.Size = new System.Drawing.Size(345, 367);
             this.codeBox.TabIndex = 1;
             this.codeBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // errorBox
             // 
-            this.errorBox.Location = new System.Drawing.Point(24, 387);
-            this.errorBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.errorBox.Location = new System.Drawing.Point(24, 489);
+            this.errorBox.Margin = new System.Windows.Forms.Padding(4);
             this.errorBox.Multiline = true;
             this.errorBox.Name = "errorBox";
             this.errorBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.errorBox.Size = new System.Drawing.Size(940, 69);
+            this.errorBox.Size = new System.Drawing.Size(830, 69);
             this.errorBox.TabIndex = 2;
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(24, 357);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox3.Location = new System.Drawing.Point(24, 459);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(4);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(940, 23);
+            this.textBox3.Size = new System.Drawing.Size(830, 23);
             this.textBox3.TabIndex = 3;
             this.textBox3.Text = "Errors";
             this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -94,19 +95,19 @@
             // 
             this.identBox.BackColor = System.Drawing.SystemColors.Window;
             this.identBox.Location = new System.Drawing.Point(375, 84);
-            this.identBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.identBox.Margin = new System.Windows.Forms.Padding(4);
             this.identBox.Multiline = true;
             this.identBox.Name = "identBox";
             this.identBox.ReadOnly = true;
             this.identBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.identBox.Size = new System.Drawing.Size(147, 259);
+            this.identBox.Size = new System.Drawing.Size(147, 165);
             this.identBox.TabIndex = 4;
             this.identBox.TextChanged += new System.EventHandler(this.identBox_TextChanged);
             // 
             // textBox5
             // 
             this.textBox5.Location = new System.Drawing.Point(24, 53);
-            this.textBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox5.Margin = new System.Windows.Forms.Padding(4);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(345, 23);
             this.textBox5.TabIndex = 5;
@@ -116,7 +117,7 @@
             // textBox6
             // 
             this.textBox6.Location = new System.Drawing.Point(375, 53);
-            this.textBox6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox6.Margin = new System.Windows.Forms.Padding(4);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(147, 23);
             this.textBox6.TabIndex = 6;
@@ -126,19 +127,19 @@
             // tokenBox
             // 
             this.tokenBox.BackColor = System.Drawing.SystemColors.Window;
-            this.tokenBox.Location = new System.Drawing.Point(793, 85);
-            this.tokenBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tokenBox.Location = new System.Drawing.Point(683, 84);
+            this.tokenBox.Margin = new System.Windows.Forms.Padding(4);
             this.tokenBox.Multiline = true;
             this.tokenBox.Name = "tokenBox";
             this.tokenBox.ReadOnly = true;
             this.tokenBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tokenBox.Size = new System.Drawing.Size(171, 259);
+            this.tokenBox.Size = new System.Drawing.Size(171, 367);
             this.tokenBox.TabIndex = 7;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(793, 53);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox2.Location = new System.Drawing.Point(683, 52);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(171, 23);
             this.textBox2.TabIndex = 8;
@@ -147,10 +148,10 @@
             // 
             // openBtn
             // 
-            this.openBtn.Location = new System.Drawing.Point(862, 463);
-            this.openBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.openBtn.Location = new System.Drawing.Point(746, 566);
+            this.openBtn.Margin = new System.Windows.Forms.Padding(4);
             this.openBtn.Name = "openBtn";
-            this.openBtn.Size = new System.Drawing.Size(102, 22);
+            this.openBtn.Size = new System.Drawing.Size(108, 23);
             this.openBtn.TabIndex = 9;
             this.openBtn.Text = "Open file";
             this.openBtn.UseVisualStyleBackColor = true;
@@ -163,21 +164,21 @@
             // pathBox
             // 
             this.pathBox.AllowDrop = true;
-            this.pathBox.Location = new System.Drawing.Point(24, 464);
-            this.pathBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pathBox.Location = new System.Drawing.Point(24, 566);
+            this.pathBox.Margin = new System.Windows.Forms.Padding(4);
             this.pathBox.Name = "pathBox";
             this.pathBox.ReadOnly = true;
             this.pathBox.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.pathBox.Size = new System.Drawing.Size(830, 23);
+            this.pathBox.Size = new System.Drawing.Size(714, 23);
             this.pathBox.TabIndex = 10;
             this.pathBox.TextChanged += new System.EventHandler(this.pathBox_TextChanged);
             // 
             // textbox8
             // 
-            this.textbox8.Location = new System.Drawing.Point(528, 53);
-            this.textbox8.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textbox8.Location = new System.Drawing.Point(377, 257);
+            this.textbox8.Margin = new System.Windows.Forms.Padding(4);
             this.textbox8.Name = "textbox8";
-            this.textbox8.Size = new System.Drawing.Size(103, 23);
+            this.textbox8.Size = new System.Drawing.Size(145, 23);
             this.textbox8.TabIndex = 12;
             this.textbox8.Text = "Symbols";
             this.textbox8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -185,19 +186,19 @@
             // symbBox
             // 
             this.symbBox.BackColor = System.Drawing.SystemColors.Window;
-            this.symbBox.Location = new System.Drawing.Point(528, 84);
-            this.symbBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.symbBox.Location = new System.Drawing.Point(377, 286);
+            this.symbBox.Margin = new System.Windows.Forms.Padding(4);
             this.symbBox.Multiline = true;
             this.symbBox.Name = "symbBox";
             this.symbBox.ReadOnly = true;
             this.symbBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.symbBox.Size = new System.Drawing.Size(103, 260);
+            this.symbBox.Size = new System.Drawing.Size(145, 165);
             this.symbBox.TabIndex = 11;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(639, 54);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox1.Location = new System.Drawing.Point(530, 53);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(146, 23);
             this.textBox1.TabIndex = 14;
@@ -207,20 +208,29 @@
             // keywordBox
             // 
             this.keywordBox.BackColor = System.Drawing.SystemColors.Window;
-            this.keywordBox.Location = new System.Drawing.Point(639, 85);
-            this.keywordBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.keywordBox.Location = new System.Drawing.Point(530, 84);
+            this.keywordBox.Margin = new System.Windows.Forms.Padding(4);
             this.keywordBox.Multiline = true;
             this.keywordBox.Name = "keywordBox";
             this.keywordBox.ReadOnly = true;
             this.keywordBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.keywordBox.Size = new System.Drawing.Size(146, 259);
+            this.keywordBox.Size = new System.Drawing.Size(146, 367);
             this.keywordBox.TabIndex = 13;
+            // 
+            // SyntaxTree
+            // 
+            this.SyntaxTree.Location = new System.Drawing.Point(861, 11);
+            this.SyntaxTree.Name = "SyntaxTree";
+            this.SyntaxTree.Size = new System.Drawing.Size(397, 612);
+            this.SyntaxTree.TabIndex = 15;
+            this.SyntaxTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.SyntaxTree_AfterSelect);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1029, 510);
+            this.ClientSize = new System.Drawing.Size(1270, 635);
+            this.Controls.Add(this.SyntaxTree);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.keywordBox);
             this.Controls.Add(this.textbox8);
@@ -238,7 +248,7 @@
             this.Controls.Add(this.startBtn);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainWindow";
             this.Text = "Signal-translator";
             this.ResumeLayout(false);
@@ -264,5 +274,6 @@
         private System.Windows.Forms.TextBox symbBox;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox keywordBox;
+        private System.Windows.Forms.TreeView SyntaxTree;
     }
 }

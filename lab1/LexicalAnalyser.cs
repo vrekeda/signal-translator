@@ -4,18 +4,20 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace lab1
+namespace signalTranslator
 {
     struct Token
     {
         public int tokenCode;
         public int row;
         public int col;
-        public Token(int _tokenCode, int _row, int _col)
+        public string tokenStr;
+        public Token(int _tokenCode, int _row, int _col, string _str)
         {
             this.tokenCode = _tokenCode;
             this.row = _row;
             this.col = _col;
+            this.tokenStr = _str;
         }
     }
 
@@ -29,7 +31,7 @@ namespace lab1
         ws
     };
 
-    class Lexer
+    class LexicalAnalyser
     {
         private List<Token> tokens;
         private List<string> errors;
@@ -42,7 +44,8 @@ namespace lab1
         private Dictionary<string, int> dates;
         private Dictionary<string, int> identifiers;
 
-        public Lexer(string path)
+        
+        public LexicalAnalyser(string path)
         {
             tokens = new List<Token>();
             errors = new List<string>();
@@ -54,7 +57,7 @@ namespace lab1
             CreateStartTables();
         }
 
-        public Lexer()
+        public LexicalAnalyser()
         {
             tokens = new List<Token>();
             errors = new List<string>();
@@ -69,40 +72,19 @@ namespace lab1
             pathToFile = path;
         }
 
-        public Dictionary<int, SymbType> GetSymbols()
-        {
-            return symbols;
-        }
+        public Dictionary<int, SymbType> GetSymbols() => symbols;
 
-        public Dictionary<string, int> GetKeywords()
-        {
-            return keywords;
-        }
+        public Dictionary<string, int> GetKeywords() => keywords;
 
-        public Dictionary<string, int> GetDates()
-        {
-            return dates;
-        }
+        public Dictionary<string, int> GetDates() => dates;
 
-        public string GetPathToFile()
-        {
-            return pathToFile;
-        }
+        public string GetPathToFile() => pathToFile;
 
-        public List<Token> GetTokens()
-        {
-            return tokens;
-        }
+        public List<Token> GetTokens() => tokens;
 
-        public Dictionary<string, int> getIdentifiers()
-        {
-            return identifiers;
-        }
+        public Dictionary<string, int> GetIdentifiers() => identifiers;
 
-        public List<string> getErrors()
-        {
-            return errors;
-        }
+        public List<string> GetErrors() => errors;
 
         public void ReadFile()
         {
@@ -134,7 +116,7 @@ namespace lab1
                     }
                     else
                     {
-                        tokens.Add(new Token('(', row, col));
+                        tokens.Add(new Token('(', row, col, "("));
                         col++;
 
                     }
@@ -145,10 +127,6 @@ namespace lab1
                 {
                     ReadToken(reader, ref curSymb, ref row, ref col);
                 }
-                //else if (symbols.ContainsKey(curSymb) && symbols[curSymb] == SymbType.dig  )
-                //{
-                //    ReadToken(reader, ref curSymb, ref row, ref col);
-                //}
                 if (symbols.ContainsKey(curSymb))
                 {
                     switch (symbols[curSymb])
@@ -166,7 +144,7 @@ namespace lab1
                             col++;
                             break;
                         case SymbType.dm:
-                            tokens.Add(new Token(curSymb, row, col));
+                            tokens.Add(new Token(curSymb, row, col, ((char)curSymb).ToString()));
                             col++;
                             break;
                         case SymbType.ws:
@@ -205,26 +183,19 @@ namespace lab1
             }
 
             buff = builder.ToString();
-
-            //if (symbols[firstSymb] == SymbType.dig)
-            //{
-            //    errors.Add("Identifier can't begin with digit at line " + row + " column " + col + ".");
-            //}
-            //else
-            //{
+            
             if (keywords.ContainsKey(buff.ToUpper()))
-                tokens.Add(new Token(keywords[buff.ToUpper()], row, col));
+                tokens.Add(new Token(keywords[buff.ToUpper()], row, col, buff));
             else
             {
                 if (identifiers.ContainsKey(buff))
-                    tokens.Add(new Token(identifiers[buff], row, col));
+                    tokens.Add(new Token(identifiers[buff], row, col, buff));
                 else
                 {
                     identifiers.Add(buff, 501 + identifiers.Count());
-                    tokens.Add(new Token(identifiers[buff], row, col));
+                    tokens.Add(new Token(identifiers[buff], row, col, buff));
                 }
             }
-            //}
             col += buff.Length;
 
             firstSymb = curSymb;
@@ -255,11 +226,11 @@ namespace lab1
             {
                 buff = builder.ToString();
                 if (dates.ContainsKey(buff))
-                    tokens.Add(new Token(dates[buff], row, col));
+                    tokens.Add(new Token(dates[buff], row, col, buff));
                 else
                 {
                     dates.Add(buff, 2001 + dates.Count());
-                    tokens.Add(new Token(dates[buff], row, col));
+                    tokens.Add(new Token(dates[buff], row, col, buff));
                 }
                 col += buff.Length;
             }

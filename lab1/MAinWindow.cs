@@ -6,20 +6,24 @@ using System.Linq;
 using System.Windows.Forms;
 using System.IO;
 
-namespace lab1
+namespace signalTranslator
 {
     public partial class MainWindow : Form
     {
-        Lexer lexer;
+        LexicalAnalyser lexer;
+        SyntaxAnalyser parser;
 
         public MainWindow()
         {
-            lexer = new Lexer();
+            lexer = new LexicalAnalyser();
+            parser = new SyntaxAnalyser();
             InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            SyntaxTree.Nodes.Clear();
+            parser.Clear();
             lexer.Clear();
             RefreshFile();
             codeBox.Clear();
@@ -35,6 +39,11 @@ namespace lab1
             FillKeywordBox();
             FillIdentifierBox();
             FillTokensBox();
+
+            parser.SetTables(lexer);
+            parser.StarSyntaxisAnalysis(ref SyntaxTree);
+            //SyntaxTree = parser.GetTree();
+            SyntaxTree.ExpandAll();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -64,36 +73,20 @@ namespace lab1
 
         private void FillTokensBox()
         {
-            Dictionary<string, int> tmpId = lexer.getIdentifiers();
+            Dictionary<string, int> tmpId = lexer.GetIdentifiers();
             Dictionary<string, int> tmpDates = lexer.GetDates();
             Dictionary<string, int> tmpKw = lexer.GetKeywords();
 
             foreach (Token token in lexer.GetTokens())
             {
-                tokenBox.AppendText(String.Format("{0, -5} ({1, -2},{2, 3}) ", token.tokenCode, token.row, token.col));
-                if (token.tokenCode < 127)
-                {
-                    tokenBox.AppendText(String.Format("{0}", (char)token.tokenCode));
-                }
-                else if (token.tokenCode > 400 && token.tokenCode <= 500)
-                {
-                    tokenBox.AppendText(tmpKw.FirstOrDefault(x => x.Value == token.tokenCode).Key);
-                }
-                else if (token.tokenCode > 500 && token.tokenCode <= 1000)
-                {
-                    tokenBox.AppendText(tmpId.FirstOrDefault(x => x.Value == token.tokenCode).Key);
-                }
-                else if (token.tokenCode > 2000 && token.tokenCode <= 3000)
-                {
-                    tokenBox.AppendText(tmpDates.FirstOrDefault(x => x.Value == token.tokenCode).Key);
-                }
+                tokenBox.AppendText(String.Format("{0, -5} ({1, -2},{2, 3}) {3} ", token.tokenCode, token.row, token.col, token.tokenStr));
                 tokenBox.AppendText(Environment.NewLine);
             }
         }
 
         private void FillErrorBox()
         {
-            foreach (string str in lexer.getErrors())
+            foreach (string str in lexer.GetErrors())
             {
                 errorBox.AppendText(str);
                 errorBox.AppendText(Environment.NewLine);
@@ -102,7 +95,7 @@ namespace lab1
 
         private void FillIdentifierBox()
         {
-            Dictionary<string, int> tmp = lexer.getIdentifiers();
+            Dictionary<string, int> tmp = lexer.GetIdentifiers();
             foreach (string str in tmp.Keys)
             {
                 identBox.AppendText(tmp[str] + " " + str);
@@ -175,6 +168,11 @@ namespace lab1
         private void pathBox_TextChanged(object sender, EventArgs e)
         {
             // pathBox.DoDragDrop();
+        }
+
+        private void SyntaxTree_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
         }
     }
 }
