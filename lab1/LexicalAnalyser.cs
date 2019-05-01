@@ -338,7 +338,11 @@ namespace signalTranslator
                 { "INTEGER", 407 },
                 { "FLOAT", 408 },
                 { "BLOCKFLOAT", 409 },
-                { "EXT", 410 }
+                { "EXT", 410 },
+                { "IF", 411 },
+                { "THEN", 412 },
+                { "ELSE", 413 },
+                { "ENDIF", 414 }
             };
         }
 

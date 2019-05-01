@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.startBtn = new System.Windows.Forms.Button();
+            this.btnLexAn = new System.Windows.Forms.Button();
             this.codeBox = new System.Windows.Forms.TextBox();
             this.errorBox = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -45,20 +45,21 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.keywordBox = new System.Windows.Forms.TextBox();
             this.SyntaxTree = new System.Windows.Forms.TreeView();
+            this.btnSynAn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // startBtn
+            // btnLexAn
             // 
-            this.startBtn.Enabled = false;
-            this.startBtn.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.startBtn.Location = new System.Drawing.Point(24, 11);
-            this.startBtn.Margin = new System.Windows.Forms.Padding(4);
-            this.startBtn.Name = "startBtn";
-            this.startBtn.Size = new System.Drawing.Size(345, 34);
-            this.startBtn.TabIndex = 0;
-            this.startBtn.Text = "Lexical Analysis";
-            this.startBtn.UseVisualStyleBackColor = true;
-            this.startBtn.Click += new System.EventHandler(this.button1_Click);
+            this.btnLexAn.Enabled = false;
+            this.btnLexAn.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnLexAn.Location = new System.Drawing.Point(24, 11);
+            this.btnLexAn.Margin = new System.Windows.Forms.Padding(4);
+            this.btnLexAn.Name = "btnLexAn";
+            this.btnLexAn.Size = new System.Drawing.Size(345, 34);
+            this.btnLexAn.TabIndex = 0;
+            this.btnLexAn.Text = "Lexical Analysis";
+            this.btnLexAn.UseVisualStyleBackColor = true;
+            this.btnLexAn.Click += new System.EventHandler(this.button1_Click);
             // 
             // codeBox
             // 
@@ -225,11 +226,25 @@
             this.SyntaxTree.TabIndex = 15;
             this.SyntaxTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.SyntaxTree_AfterSelect);
             // 
+            // btnSynAn
+            // 
+            this.btnSynAn.Enabled = false;
+            this.btnSynAn.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnSynAn.Location = new System.Drawing.Point(377, 10);
+            this.btnSynAn.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSynAn.Name = "btnSynAn";
+            this.btnSynAn.Size = new System.Drawing.Size(477, 34);
+            this.btnSynAn.TabIndex = 16;
+            this.btnSynAn.Text = "Syntax Analysis";
+            this.btnSynAn.UseVisualStyleBackColor = true;
+            this.btnSynAn.Click += new System.EventHandler(this.btnSynAn_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1270, 635);
+            this.Controls.Add(this.btnSynAn);
             this.Controls.Add(this.SyntaxTree);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.keywordBox);
@@ -245,7 +260,7 @@
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.errorBox);
             this.Controls.Add(this.codeBox);
-            this.Controls.Add(this.startBtn);
+            this.Controls.Add(this.btnLexAn);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -258,7 +273,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button startBtn;
+        private System.Windows.Forms.Button btnLexAn;
         private System.Windows.Forms.TextBox codeBox;
         private System.Windows.Forms.TextBox errorBox;
         private System.Windows.Forms.TextBox textBox3;
@@ -275,5 +290,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox keywordBox;
         private System.Windows.Forms.TreeView SyntaxTree;
+        private System.Windows.Forms.Button btnSynAn;
     }
 }

@@ -23,6 +23,7 @@ namespace signalTranslator
         private void button1_Click(object sender, EventArgs e)
         {
             SyntaxTree.Nodes.Clear();
+            btnSynAn.Enabled = false;
             parser.Clear();
             lexer.Clear();
             RefreshFile();
@@ -39,11 +40,10 @@ namespace signalTranslator
             FillKeywordBox();
             FillIdentifierBox();
             FillTokensBox();
-
-            parser.SetTables(lexer);
-            parser.StarSyntaxisAnalysis(ref SyntaxTree);
-            //SyntaxTree = parser.GetTree();
-            SyntaxTree.ExpandAll();
+            if (lexer.GetErrors().Count==0)
+            {
+                btnSynAn.Enabled = true;
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -86,9 +86,14 @@ namespace signalTranslator
 
         private void FillErrorBox()
         {
-            foreach (string str in lexer.GetErrors())
+            foreach (string err in lexer.GetErrors())
             {
-                errorBox.AppendText(str);
+                errorBox.AppendText(err);
+                errorBox.AppendText(Environment.NewLine);
+            }
+            foreach (string err in parser.GetErrors())
+            {
+                errorBox.AppendText(err);
                 errorBox.AppendText(Environment.NewLine);
             }
         }
@@ -102,7 +107,7 @@ namespace signalTranslator
                 identBox.AppendText(Environment.NewLine);
             }
             tmp = lexer.GetDates();
-            identBox.AppendText("Dates:");
+            //identBox.AppendText("Dates:");
             identBox.AppendText(Environment.NewLine);
             foreach (string str in tmp.Keys)
             {
@@ -159,7 +164,7 @@ namespace signalTranslator
             openFileDialog1.ShowDialog();
             str = openFileDialog1.FileName;
             pathBox.Text = str;
-            startBtn.Enabled = true;
+            btnLexAn.Enabled = true;
             lexer.SetPath(str);
             FillBoxWithCode(lexer.GetPathToFile());
             //folderBrowserDialog1.ShowDialog();
@@ -173,6 +178,18 @@ namespace signalTranslator
         private void SyntaxTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
+        }
+
+        private void btnSynAn_Click(object sender, EventArgs e)
+        {
+            parser.Clear();
+            errorBox.Clear();
+            SyntaxTree.Nodes.Clear();
+            parser.SetTables(lexer);
+            parser.StarSyntaxisAnalysis(ref SyntaxTree);
+            FillErrorBox();
+            //SyntaxTree = parser.GetTree();
+            SyntaxTree.ExpandAll();
         }
     }
 }
