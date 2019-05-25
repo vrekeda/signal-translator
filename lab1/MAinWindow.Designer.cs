@@ -1,4 +1,4 @@
-﻿namespace signalTranslator
+﻿namespace SignalTranslator
 {
     partial class MainWindow
     {
@@ -46,6 +46,9 @@
             this.keywordBox = new System.Windows.Forms.TextBox();
             this.SyntaxTree = new System.Windows.Forms.TreeView();
             this.btnSynAn = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.asmCodeBox = new System.Windows.Forms.TextBox();
+            this.CodeGenButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnLexAn
@@ -55,7 +58,7 @@
             this.btnLexAn.Location = new System.Drawing.Point(24, 11);
             this.btnLexAn.Margin = new System.Windows.Forms.Padding(4);
             this.btnLexAn.Name = "btnLexAn";
-            this.btnLexAn.Size = new System.Drawing.Size(345, 34);
+            this.btnLexAn.Size = new System.Drawing.Size(257, 34);
             this.btnLexAn.TabIndex = 0;
             this.btnLexAn.Text = "Lexical Analysis";
             this.btnLexAn.UseVisualStyleBackColor = true;
@@ -134,7 +137,7 @@
             this.tokenBox.Name = "tokenBox";
             this.tokenBox.ReadOnly = true;
             this.tokenBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tokenBox.Size = new System.Drawing.Size(171, 367);
+            this.tokenBox.Size = new System.Drawing.Size(171, 165);
             this.tokenBox.TabIndex = 7;
             // 
             // textBox2
@@ -176,9 +179,11 @@
             // 
             // textbox8
             // 
+            this.textbox8.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.textbox8.Location = new System.Drawing.Point(377, 257);
             this.textbox8.Margin = new System.Windows.Forms.Padding(4);
             this.textbox8.Name = "textbox8";
+            this.textbox8.ReadOnly = true;
             this.textbox8.Size = new System.Drawing.Size(145, 23);
             this.textbox8.TabIndex = 12;
             this.textbox8.Text = "Symbols";
@@ -215,7 +220,7 @@
             this.keywordBox.Name = "keywordBox";
             this.keywordBox.ReadOnly = true;
             this.keywordBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.keywordBox.Size = new System.Drawing.Size(146, 367);
+            this.keywordBox.Size = new System.Drawing.Size(146, 165);
             this.keywordBox.TabIndex = 13;
             // 
             // SyntaxTree
@@ -230,20 +235,58 @@
             // 
             this.btnSynAn.Enabled = false;
             this.btnSynAn.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnSynAn.Location = new System.Drawing.Point(377, 10);
+            this.btnSynAn.Location = new System.Drawing.Point(289, 11);
             this.btnSynAn.Margin = new System.Windows.Forms.Padding(4);
             this.btnSynAn.Name = "btnSynAn";
-            this.btnSynAn.Size = new System.Drawing.Size(477, 34);
+            this.btnSynAn.Size = new System.Drawing.Size(233, 36);
             this.btnSynAn.TabIndex = 16;
             this.btnSynAn.Text = "Syntax Analysis";
             this.btnSynAn.UseVisualStyleBackColor = true;
             this.btnSynAn.Click += new System.EventHandler(this.btnSynAn_Click);
+            // 
+            // textBox4
+            // 
+            this.textBox4.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.textBox4.Location = new System.Drawing.Point(529, 257);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.ReadOnly = true;
+            this.textBox4.Size = new System.Drawing.Size(325, 23);
+            this.textBox4.TabIndex = 17;
+            this.textBox4.Text = "Asm code";
+            this.textBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
+            // 
+            // asmCodeBox
+            // 
+            this.asmCodeBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.asmCodeBox.Location = new System.Drawing.Point(530, 286);
+            this.asmCodeBox.Multiline = true;
+            this.asmCodeBox.Name = "asmCodeBox";
+            this.asmCodeBox.ReadOnly = true;
+            this.asmCodeBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.asmCodeBox.Size = new System.Drawing.Size(323, 164);
+            this.asmCodeBox.TabIndex = 18;
+            // 
+            // CodeGenButton
+            // 
+            this.CodeGenButton.Enabled = false;
+            this.CodeGenButton.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CodeGenButton.Location = new System.Drawing.Point(529, 11);
+            this.CodeGenButton.Name = "CodeGenButton";
+            this.CodeGenButton.Size = new System.Drawing.Size(324, 35);
+            this.CodeGenButton.TabIndex = 19;
+            this.CodeGenButton.Text = "Code Generation";
+            this.CodeGenButton.UseVisualStyleBackColor = true;
+            this.CodeGenButton.Click += new System.EventHandler(this.CodeGenButton_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1270, 635);
+            this.Controls.Add(this.CodeGenButton);
+            this.Controls.Add(this.asmCodeBox);
+            this.Controls.Add(this.textBox4);
             this.Controls.Add(this.btnSynAn);
             this.Controls.Add(this.SyntaxTree);
             this.Controls.Add(this.textBox1);
@@ -291,5 +334,8 @@
         private System.Windows.Forms.TextBox keywordBox;
         private System.Windows.Forms.TreeView SyntaxTree;
         private System.Windows.Forms.Button btnSynAn;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox asmCodeBox;
+        private System.Windows.Forms.Button CodeGenButton;
     }
 }

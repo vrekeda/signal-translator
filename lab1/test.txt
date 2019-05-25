@@ -1,0 +1,6 @@
+program prog1;
+procedure proc (var1, var, var2:integer; var4:float;);
+procedure proc2;
+procedure proc3();
+BEGIN
+END;

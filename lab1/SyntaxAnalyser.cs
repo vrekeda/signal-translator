@@ -5,10 +5,11 @@ using System.Windows.Forms;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace signalTranslator
+namespace SignalTranslator
 {
     class SyntaxAnalyser
     {
+        public LexicalAnalyser lexicalAnalyser;
         private List<Token> tokens;
         private List<string> syntaxErrors;
         private TreeView syntaxTree;
@@ -29,6 +30,7 @@ namespace signalTranslator
         }
         public SyntaxAnalyser(LexicalAnalyser lexer)
         {
+            lexicalAnalyser = lexer;
             //syntaxTree = new TreeView();
             tokens = lexer.GetTokens().ToList();
             syntaxErrors = new List<string>();
@@ -37,6 +39,7 @@ namespace signalTranslator
 
         public void SetTables(LexicalAnalyser lexer)
         {
+            lexicalAnalyser = lexer;
             tokens = lexer.GetTokens().ToList();
         }
 
@@ -45,6 +48,7 @@ namespace signalTranslator
             syntaxTree = tree;
             SignalProgram();
         }
+
         private void SignalProgram()
         {
             TreeNode curNode = syntaxTree.Nodes.Add("<Signal Program>");

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace signalTranslator
+namespace SignalTranslator
 {
     struct Token
     {
@@ -159,15 +159,15 @@ namespace signalTranslator
             }
             reader.Close();
 
-            foreach (Token i in tokens)
-            {
-                Console.Write($"{i.tokenCode} {i.row} {i.col}\n");
-            }
-            foreach (string i in errors)
-            {
-                Console.WriteLine(i);
-            }
-            Console.WriteLine(tokens.Count());
+            //foreach (Token i in tokens)
+            //{
+            //    Console.Write($"{i.tokenCode} {i.row} {i.col}\n");
+            //}
+            //foreach (string i in errors)
+            //{
+            //    Console.WriteLine(i);
+            //}
+            //Console.WriteLine(tokens.Count());
         }
 
         private void ReadToken(StreamReader reader, ref int firstSymb, ref int row, ref int col)

@@ -6,24 +6,28 @@ using System.Linq;
 using System.Windows.Forms;
 using System.IO;
 
-namespace signalTranslator
+namespace SignalTranslator
 {
     public partial class MainWindow : Form
     {
         LexicalAnalyser lexer;
         SyntaxAnalyser parser;
-
+        CodeGenerator codeGenerator;
         public MainWindow()
         {
             lexer = new LexicalAnalyser();
             parser = new SyntaxAnalyser();
+            codeGenerator = new CodeGenerator();
             InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            asmCodeBox.Clear();
             SyntaxTree.Nodes.Clear();
             btnSynAn.Enabled = false;
+            CodeGenButton.Enabled = false;
+            codeGenerator.Clear();
             parser.Clear();
             lexer.Clear();
             RefreshFile();
@@ -95,6 +99,20 @@ namespace signalTranslator
             {
                 errorBox.AppendText(err);
                 errorBox.AppendText(Environment.NewLine);
+            }
+            foreach (string err in codeGenerator.errors)
+            {
+                errorBox.AppendText(err);
+                errorBox.AppendText(Environment.NewLine);
+            }
+        }
+
+        private void FillasmCodeBox()
+        {
+            foreach (string str in codeGenerator.asmCode)
+            {
+                asmCodeBox.AppendText(str);
+                asmCodeBox.AppendText(Environment.NewLine);
             }
         }
 
@@ -190,6 +208,25 @@ namespace signalTranslator
             FillErrorBox();
             //SyntaxTree = parser.GetTree();
             SyntaxTree.ExpandAll();
+            if (parser.GetErrors().Count == 0)
+            {
+                CodeGenButton.Enabled = true;
+            }
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CodeGenButton_Click(object sender, EventArgs e)
+        {
+            codeGenerator.Clear();
+            asmCodeBox.Clear();
+            codeGenerator.SetSyntaxAnalyser(parser);
+            codeGenerator.StartCodeGeneration();
+            FillasmCodeBox();
+            FillErrorBox();
         }
     }
 }
